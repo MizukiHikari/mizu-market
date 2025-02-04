@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventory</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <style>
+        /* Gaya umum untuk elemen body */
+        body {
+            font-family: 'Rockwell', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #e9ecef;
+            color: #333;
+        }
+
+        /* Gaya untuk judul */
+        h1 {
+            font-size: 36px;
+            text-align: center;
+            margin-bottom: 20px;
+            color: #000000;
+            font-weight: bold;
+        }
+
+        /* Gaya untuk kontainer tabel dan form */
+        .table-container, .form-container {
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            padding: 20px;
+        }
+
+        /* Gaya untuk kontainer form */
+        .form-container {
+            max-width: 600px;
+            margin: 20px auto;
+        }
+
+        /* Gaya untuk tabel */
+        .table {
+            margin-top: 20px;
+            border-collapse: collapse;
+            font-size: 22px;
+        }
+
+        /* Gaya untuk header tabel */
+        th {
+            background-color: #007BFF;
+            color: #ffffff;
+            padding: 10px;
+            text-align: center;
+            cursor: pointer; /* Menandakan kolom dapat diurutkan */
+        }
+
+        /* Gaya untuk sel tabel */
+        td {
+            padding: 10px;
+            text-align: center;
+            vertical-align: middle;
+            background-color: #f1f1f1;
+            color: #333;
+        }
+
+        /* Gaya untuk tombol */
+        .btn {
+            margin: 5px;
+        }
+
+        /* Gaya untuk tombol tambah produk */
+        .add-product {
+            background-color: #007BFF;
+            color: #ffffff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            width: 100%;
+        }
+
+        /* Gaya saat tombol tambah produk di-hover */
+        .add-product:hover {
+            background-color: #0056b3;
+        }
+
+        /* Gaya untuk elemen tanggal dan waktu */
+        .date-time {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            font-size: 18px;
+            color: #333;
+            transition: opacity 0.3s ease; /* Efek transisi untuk perubahan */
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Inventory</h1>
+
+    <!-- Kontainer untuk tabel produk -->
+    <div class="container table-container">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <!-- Header tabel dengan fungsi untuk menyortir kolom -->
+                    <th onclick="sortTable(0)">Category</th>
+                    <th onclick="sortTable(1)">Name</th>
+                    <th onclick="sortTable(2)">Price</th>
+                    <th onclick="sortTable(3)">Stock</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for product in products %}
+                <tr id="product-{{ product.id }}">
+                    <td>{{ product.category }}</td>
+                    <td>{{ product.name }}</td>
+                    <td>{{ product.price }}</td>
+                    <td>{{ product.stock }}</td>
+                    <td>
+                        <!-- Tombol untuk mengedit produk -->
+                        <button class="btn btn-warning btn-sm" data-product-id="{{ product.id }}" onclick="showEditModal(this)">Edit</button>
+                        <!-- Link untuk menghapus produk dengan konfirmasi -->
+                        <a href="{{ url_for('delete_product', product_id=product.id) }}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this product?');">Delete</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Kontainer untuk form penambahan produk -->
+    <div class="container form-container">
+        <form action="{{ url_for('add_product') }}" method="POST" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="category">Category</label>
+                <input type="text" class="form-control" name="category" required>
+            </div>
+            <div class="form-group">
+                <label for="name">Product Name</label>
+                <input type="text" class="form-control" name="name" required>
+            </div>
+            <div class="form-group">
+                <label for="price">Price</label>
+                <input type="number" class="form-control" name="price" required>
+            </div>
+            <div class="form-group">
+                <label for="stock">Stock</label>
+                <input type="number" class="form-control" name="stock" required>
+            </div>
+            <div class="form-group">
+                <label for="image">Product Image</label>
+                <input type="file" class="form-control-file" name="image">
+            </div>
+            <button type="submit" class="add-product">Add Product</button>
+        </form>
+    </div>
+
+    <!-- Modal untuk mengedit produk -->
+    <div class="modal fade" id="editProductModal" tabindex="-1" aria-labelledby="editProductModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editProductModalLabel">Edit Product</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span>&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="editProductForm">
+                        <input type="hidden" id="edit-product-id" name="product_id">
+                        <div class="form-group">
+                            <label for="edit-category">Category</label>
+                            <input type="text" class="form-control" id="edit-category" name="category" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-name">Product Name</label>
+                            <input type="text" class="form-control" id="edit-name" name="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-price">Price</label>
+                            <input type="number" class="form-control" id="edit-price" name="price" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-stock">Stock</label>
+                            <input type="number" class="form-control" id="edit-stock" name="stock" required>
+                        </div>
+                        <button type="submit" class="add-product">Update Product</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Fungsi untuk menampilkan modal edit produk dan mengisi data produk
+        function showEditModal(button) {
+            var productId = button.getAttribute('data-product-id');
+            // Fetch product data menggunakan AJAX
+            $.ajax({
+                url: '/get_product/' + productId,
+                method: 'GET',
+                success: function(data) {
+                    $('#edit-category').val(data.category);
+                    $('#edit-name').val(data.name);
+                    $('#edit-price').val(data.price);
+                    $('#edit-stock').val(data.stock);
+                    $('#edit-product-id').val(data.id);
+                    $('#editProductModal').modal('show'); // Tampilkan modal
+                },
+                error: function() {
+                    alert('Error fetching product data');
+                }
+            });
+        }
+
+        // Menangani pengiriman form edit produk
+        $('#editProductForm').on('submit', function(event) {
+            event.preventDefault();
+            var productId = $('#edit-product-id').val();
+            $.ajax({
+                url: '/edit_product/' + productId,
+                method: 'POST',
+                data: {
+                    category: $('#edit-category').val(),
+                    name: $('#edit-name').val(),
+                    price: $('#edit-price').val(),
+                    stock: $('#edit-stock').val(),
+                },
+                success: function(data) {
+                    // Memperbarui data di tabel
+                    $('#product-' + data.id + ' td:nth-child(1)').text(data.category);
+                    $('#product-' + data.id + ' td:nth-child(2)').text(data.name);
+                    $('#product-' + data.id + ' td:nth-child(3)').text(data.price);
+                    $('#product-' + data.id + ' td:nth-child(4)').text(data.stock);
+                    $('#editProductModal').modal('hide'); // Tutup modal
+                },
+                error: function() {
+                    alert('Error updating product data');
+                }
+            });
+        });
+
+        // Fungsi untuk menyortir tabel berdasarkan kolom yang diklik
+        function sortTable(columnIndex) {
+            var rows = $('.table tbody tr').get();
+            rows.sort(function(a, b) {
+                var A = $(a).children('td').eq(columnIndex).text();
+                var B = $(b).children('td').eq(columnIndex).text();
+
+                if ($.isNumeric(A) && $.isNumeric(B)) {
+                    return parseFloat(A) - parseFloat(B); // Sortir numerik
+                } else {
+                    return A.localeCompare(B); // Sortir string
+                }
+            });
+
+            $.each(rows, function(index, row) {
+                $('.table').children('tbody').append(row);
+            });
+        }
+    </script>
+
+    <!-- Tanggal dan Waktu -->
+    <div class="date-time" id="date-time"></div>
+
+    <script>
+        // Fungsi untuk memperbarui tanggal dan waktu
+        function updateDateTime() {
+            const options = {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+            };
+            const now = new Date();
+            document.getElementById('date-time').innerHTML = now.toLocaleDateString('id-ID', options);
+        }
+
+        // Update tanggal dan waktu tiap detik
+        setInterval(updateDateTime, 1000);
+        updateDateTime();
+    </script>
+</body>
+</html>
