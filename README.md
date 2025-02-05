@@ -23,8 +23,8 @@ Before running the application, ensure you have the following installed:
 ## Installation
 1. Clone the repository:
    ```sh
-   git clone https://github.com/your-repo/inventory-system.git
-   cd inventory-system
+   git clone https://github.com/MizukiHikari/mizu-market
+   cd mizu-market
    ```
 2. Create a virtual environment (optional but recommended):
    ```sh
