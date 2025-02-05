@@ -1,51 +1,68 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Dashboard</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="flex flex-col items-center justify-center min-h-screen bg-gray-100 font-sans p-4">
-
+    <link href="static\output.css" rel="stylesheet" />
+  </head>
+  <body
+    class="flex min-h-screen flex-col items-center justify-center bg-gray-100 p-4 font-sans"
+  >
     <!-- Title -->
     <header class="mb-8 text-center">
-        <h1 class="text-4xl sm:text-5xl font-bold text-gray-900">Inventory Nexus</h1>
+      <h1 class="text-4xl font-bold text-gray-900 sm:text-5xl">
+        Inventory Nexus
+      </h1>
     </header>
 
     <!-- Navigation Buttons -->
-    <div class="flex flex-col sm:flex-row gap-4 sm:gap-6 w-full max-w-xs sm:max-w-md">
-        <button onclick="window.location.href='/shop'" class="px-6 py-3 text-lg sm:text-2xl font-semibold text-white bg-blue-500 rounded-lg shadow-md transition-transform transform hover:bg-blue-700 hover:scale-105 focus:outline-none w-full">
-            Shop
-        </button>
-        <button onclick="window.location.href='/inventory'" class="px-6 py-3 text-lg sm:text-2xl font-semibold text-white bg-blue-500 rounded-lg shadow-md transition-transform transform hover:bg-blue-700 hover:scale-105 focus:outline-none w-full">
-            Inventory
-        </button>
-        <button onclick="window.location.href='/history'" class="px-6 py-3 text-lg sm:text-2xl font-semibold text-white bg-blue-500 rounded-lg shadow-md transition-transform transform hover:bg-blue-700 hover:scale-105 focus:outline-none w-full">
-            Transaction History
-        </button>
+    <div
+      class="flex w-full max-w-xs flex-col gap-4 sm:max-w-md sm:flex-row sm:gap-6"
+    >
+      <button
+        onclick="window.location.href='/shop'"
+        class="w-full transform rounded-lg bg-blue-500 px-6 py-3 text-lg font-semibold text-white shadow-md transition-transform hover:scale-105 hover:bg-blue-700 focus:outline-none sm:text-2xl"
+      >
+        Shop
+      </button>
+      <button
+        onclick="window.location.href='/inventory'"
+        class="w-full transform rounded-lg bg-blue-500 px-6 py-3 text-lg font-semibold text-white shadow-md transition-transform hover:scale-105 hover:bg-blue-700 focus:outline-none sm:text-2xl"
+      >
+        Inventory
+      </button>
+      <button
+        onclick="window.location.href='/history'"
+        class="w-full transform rounded-lg bg-blue-500 px-6 py-3 text-lg font-semibold text-white shadow-md transition-transform hover:scale-105 hover:bg-blue-700 focus:outline-none sm:text-2xl"
+      >
+        Transaction History
+      </button>
     </div>
 
     <!-- Date & Time -->
-    <div id="date-time" class="absolute bottom-5 right-5 sm:bottom-10 sm:right-10 text-sm sm:text-lg text-gray-700"></div>
+    <div
+      id="date-time"
+      class="absolute right-5 bottom-5 text-sm text-gray-700 sm:right-10 sm:bottom-10 sm:text-lg"
+    ></div>
 
     <script>
-        function updateDateTime() {
-            const options = {
-                weekday: 'long',
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit',
-                second: '2-digit',
-            };
-            document.getElementById('date-time').innerHTML = new Date().toLocaleDateString('id-ID', options);
-        }
+      function updateDateTime() {
+        const options = {
+          weekday: "long",
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
+        };
+        document.getElementById("date-time").innerHTML =
+          new Date().toLocaleDateString("id-ID", options);
+      }
 
-        setInterval(updateDateTime, 1000);
-        updateDateTime();
+      setInterval(updateDateTime, 1000);
+      updateDateTime();
     </script>
-
-</body>
+  </body>
 </html>

@@ -1,302 +1,375 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Transaction History</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/dom-to-image@2.6.0/dist/dom-to-image.min.js"></script>
     <style>
-        /* Gaya untuk elemen body */
-        body {
-            font-family: 'Roboto', sans-serif;
-            margin: 0;
-            padding: 20px;
-            background-color: #e9ecef;
-            color: #333;
-        }
+      /* Gaya untuk elemen body */
+      body {
+        font-family: "Roboto", sans-serif;
+        margin: 0;
+        padding: 20px;
+        background-color: #e9ecef;
+        color: #333;
+      }
 
-        /* Gaya untuk judul */
-        h1 {
-            font-size: 36px;
-            text-align: center;
-            margin-bottom: 20px;
-            color: #000000;
-            font-weight: bold;
-        }
+      /* Gaya untuk judul */
+      h1 {
+        font-size: 36px;
+        text-align: center;
+        margin-bottom: 20px;
+        color: #000000;
+        font-weight: bold;
+      }
 
-        /* Gaya untuk kontainer tabel dan form */
-        .table-container, .form-container {
-            background-color: #ffffff;
-            border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-            padding: 20px;
-        }
+      /* Gaya untuk kontainer tabel dan form */
+      .table-container,
+      .form-container {
+        background-color: #ffffff;
+        border-radius: 8px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        padding: 20px;
+      }
 
-        /* Gaya untuk form */
-        .form-container {
-            max-width: 600px;
-            margin: 20px auto;
-        }
+      /* Gaya untuk form */
+      .form-container {
+        max-width: 600px;
+        margin: 20px auto;
+      }
 
-        /* Gaya untuk tabel */
-        .table {
-            margin-top: 20px;
-            border-collapse: collapse;
-            font-size: 16px;
-        }
+      /* Gaya untuk tabel */
+      .table {
+        margin-top: 20px;
+        border-collapse: collapse;
+        font-size: 16px;
+      }
 
-        /* Gaya untuk header tabel */
-        th {
-            background-color: #007BFF;
-            color: #ffffff;
-            padding: 10px;
-            text-align: center;
-            cursor: pointer; /* Menambahkan gaya kursor untuk kolom yang dapat diurutkan */
-        }
+      /* Gaya untuk header tabel */
+      th {
+        background-color: #007bff;
+        color: #ffffff;
+        padding: 10px;
+        text-align: center;
+        cursor: pointer; /* Menambahkan gaya kursor untuk kolom yang dapat diurutkan */
+      }
 
-        /* Gaya untuk sel tabel */
-        td {
-            padding: 10px;
-            text-align: center;
-            vertical-align: middle;
-            background-color: #f1f1f1;
-            color: #333;
-        }
+      /* Gaya untuk sel tabel */
+      td {
+        padding: 10px;
+        text-align: center;
+        vertical-align: middle;
+        background-color: #f1f1f1;
+        color: #333;
+      }
 
-        /* Gaya untuk tombol */
-        .btn {
-            margin: 5px;
-        }
+      /* Gaya untuk tombol */
+      .btn {
+        margin: 5px;
+      }
 
-        /* Gaya untuk tampilan tanggal dan waktu */
-        .date-time {
-            position: fixed;
-            bottom: 10px;
-            right: 10px;
-            font-size: 18px;
-            color: #333;
-            transition: opacity 0.3s ease;
-        }
+      /* Gaya untuk tampilan tanggal dan waktu */
+      .date-time {
+        position: fixed;
+        bottom: 10px;
+        right: 10px;
+        font-size: 18px;
+        color: #333;
+        transition: opacity 0.3s ease;
+      }
 
-        /* Gaya untuk tabel dalam modal */
-        #viewTransactionModal .modal-body table {
-            border-collapse: collapse;
-            width: 100%;
-        }
+      /* Gaya untuk tabel dalam modal */
+      #viewTransactionModal .modal-body table {
+        border-collapse: collapse;
+        width: 100%;
+      }
 
-        /* Gaya untuk baris dalam tabel modal */
-        #viewTransactionModal .modal-body table tr {
-            background-color: #f9f9f9;
-            padding: 10px;
-            border-bottom: 1px solid #ccc;
-        }
+      /* Gaya untuk baris dalam tabel modal */
+      #viewTransactionModal .modal-body table tr {
+        background-color: #f9f9f9;
+        padding: 10px;
+        border-bottom: 1px solid #ccc;
+      }
 
-        /* Gaya untuk sel tabel modal */
-        #viewTransactionModal .modal-body table tr td {
-            padding: 10px;
-            border: none;
-        }
+      /* Gaya untuk sel tabel modal */
+      #viewTransactionModal .modal-body table tr td {
+        padding: 10px;
+        border: none;
+      }
 
-        /* Gaya untuk baris ganjil dalam tabel modal */
-        #viewTransactionModal .modal-body table tr:nth-child(odd) {
-            background-color: #f9f9f9;
-        }
+      /* Gaya untuk baris ganjil dalam tabel modal */
+      #viewTransactionModal .modal-body table tr:nth-child(odd) {
+        background-color: #f9f9f9;
+      }
 
-        /* Gaya untuk baris genap dalam tabel modal */
-        #viewTransactionModal .modal-body table tr:nth-child(even) {
-            background-color: #fff;
-        }
+      /* Gaya untuk baris genap dalam tabel modal */
+      #viewTransactionModal .modal-body table tr:nth-child(even) {
+        background-color: #fff;
+      }
 
-        /* Gaya untuk modal view transaksi */
-        #viewTransactionModal .modal-lg {
-            width: 80%;
-            max-width: 700px;
-            margin: 0 auto;
-        }
+      /* Gaya untuk modal view transaksi */
+      #viewTransactionModal .modal-lg {
+        width: 80%;
+        max-width: 700px;
+        margin: 0 auto;
+      }
 
-        /* Gaya untuk gambar produk dalam modal */
-        #viewTransactionModal .product-image {
-            width: 200px;
-            height: 200px;
-            object-fit: cover;
-        }
+      /* Gaya untuk gambar produk dalam modal */
+      #viewTransactionModal .product-image {
+        width: 200px;
+        height: 200px;
+        object-fit: cover;
+      }
     </style>
-</head>
+  </head>
 
-<body>
+  <body>
     <!-- Menampilkan pesan yang diflash -->
-    {% with messages = get_flashed_messages(with_categories=True) %}
-        {% if messages %}
-            <div class="alert alert-dismissible fade show" role="alert">
-                {% for category, message in messages %}
-                    <div class="alert alert-{{ category }}">{{ message }}</div>
-                {% endfor %}
-            </div>
-        {% endif %}
-    {% endwith %}
-    
+    {% with messages = get_flashed_messages(with_categories=True) %} {% if
+    messages %}
+    <div class="alert alert-dismissible fade show" role="alert">
+      {% for category, message in messages %}
+      <div class="alert alert-{{ category }}">{{ message }}</div>
+      {% endfor %}
+    </div>
+    {% endif %} {% endwith %}
+
     <!-- Judul halaman -->
     <h1>Transaction History</h1>
 
     <!-- Kontainer untuk tabel transaksi -->
-    <div class="container table-container">
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>Timestamp</th>
-                    <th>Buyer's Name</th>
-                    <th>Product</th>
-                    <th>Quantity Sold</th>
-                    <th>Total Price</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- Looping untuk setiap transaksi yang ada -->
-                {% for transaction in transactions %}
-                <tr>
-                    <td>{{ transaction.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</td>
-                    <td>{{ transaction.buyer_name }}</td>
-                    <td>{{ transaction.product.name }}</td>  <!-- Mengasumsikan ada relasi ke tabel Produk -->
-                    <td>{{ transaction.quantity }}</td>
-                    <td>IDR {{ "{:,.0f}".format(transaction.total_price).replace(",", ".") }}</td>
-                    <td>
-                        <!-- Tombol untuk melihat detail transaksi -->
-                        <button class="btn btn-success btn-sm" data-transaction-id="{{ transaction.id }}" onclick="showViewModal(this)">View Transaction</button>
-                        <!-- Form untuk menghapus transaksi -->
-                        <form action="{{ url_for('delete_transaction', transaction_id=transaction.id) }}" method="post" style="display:inline;">
-                            <button class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this transaction?');">Delete</button>
-                        </form>
-                    </td>                    
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+    <div class="table-container container">
+      <table class="table-bordered table">
+        <thead>
+          <tr>
+            <th>Timestamp</th>
+            <th>Buyer's Name</th>
+            <th>Product</th>
+            <th>Quantity Sold</th>
+            <th>Total Price</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Looping untuk setiap transaksi yang ada -->
+          {% for transaction in transactions %}
+          <tr>
+            <td>{{ transaction.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+            <td>{{ transaction.buyer_name }}</td>
+            <td>{{ transaction.product.name }}</td>
+            <!-- Mengasumsikan ada relasi ke tabel Produk -->
+            <td>{{ transaction.quantity }}</td>
+            <td>
+              IDR {{ "{:,.0f}".format(transaction.total_price).replace(",", ".")
+              }}
+            </td>
+            <td>
+              <!-- Tombol untuk melihat detail transaksi -->
+              <button
+                class="btn btn-success btn-sm"
+                data-transaction-id="{{ transaction.id }}"
+                onclick="showViewModal(this)"
+              >
+                View Transaction
+              </button>
+              <!-- Form untuk menghapus transaksi -->
+              <form
+                action="{{ url_for('delete_transaction', transaction_id=transaction.id) }}"
+                method="post"
+                style="display: inline"
+              >
+                <button
+                  class="btn btn-danger btn-sm"
+                  onclick="return confirm('Are you sure you want to delete this transaction?');"
+                >
+                  Delete
+                </button>
+              </form>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
     </div>
 
     <!-- Modal untuk melihat detail transaksi -->
-    <div class="modal fade" id="viewTransactionModal" tabindex="-1" aria-labelledby="viewTransactionModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="viewTransactionModalLabel">View Transaction</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <!-- Data transaksi akan ditampilkan di sini -->
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" id="save-as-png">Save as PNG</button>
-                </div>
-            </div>
+    <div
+      class="modal fade"
+      id="viewTransactionModal"
+      tabindex="-1"
+      aria-labelledby="viewTransactionModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="viewTransactionModalLabel">
+              View Transaction
+            </h5>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <!-- Data transaksi akan ditampilkan di sini -->
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-dismiss="modal"
+            >
+              Close
+            </button>
+            <button type="button" class="btn btn-primary" id="save-as-png">
+              Save as PNG
+            </button>
+          </div>
         </div>
+      </div>
     </div>
 
     <script>
-        // Fungsi untuk menampilkan modal detail transaksi
-        function showViewModal(button) {
-            console.log('showViewModal called');
-            var transactionId = button.getAttribute('data-transaction-id');
-            $.ajax({
-                url: '/view_transaction/' + transactionId,
-                method: 'GET',
-                success: function(data) {
-                    console.log('data:', data);
-                    var buyerName = data.buyer_name;
-                    var transactions = data.transactions;
-                    var timestamp = data.timestamp;
+      // Fungsi untuk menampilkan modal detail transaksi
+      function showViewModal(button) {
+        console.log("showViewModal called");
+        var transactionId = button.getAttribute("data-transaction-id");
+        $.ajax({
+          url: "/view_transaction/" + transactionId,
+          method: "GET",
+          success: function (data) {
+            console.log("data:", data);
+            var buyerName = data.buyer_name;
+            var transactions = data.transactions;
+            var timestamp = data.timestamp;
 
-                    var html = '';
-                    html += '<p style="font-size: 32px; font-weight: bold; text-align: center; margin-bottom: 5px; color: #333;">Mizu\'s Corner</p>';
-                    html += '<p style="font-size: 14px; text-align: center; margin-bottom: 20px; color: gray;">' + timestamp + '</p>';
-                    html += '<p style="font-size: 16px; font-weight: bold; margin-bottom: 10px;"><b>Buyer:</b> ' + buyerName + '</p>';
+            var html = "";
+            html +=
+              '<p style="font-size: 32px; font-weight: bold; text-align: center; margin-bottom: 5px; color: #333;">Mizu\'s Corner</p>';
+            html +=
+              '<p style="font-size: 14px; text-align: center; margin-bottom: 20px; color: gray;">' +
+              timestamp +
+              "</p>";
+            html +=
+              '<p style="font-size: 16px; font-weight: bold; margin-bottom: 10px;"><b>Buyer:</b> ' +
+              buyerName +
+              "</p>";
 
-                    // Menghitung total harga dan kuantitas
-                    let totalSum = 0;
-                    let totalQuantity = 0;
-                    transactions.forEach(function(transaction) {
-                        totalSum += transaction.total_price;
-                        totalQuantity += transaction.quantity;
-                    });
-                    transactions.forEach(function(transaction) {
-                        // Calculate price per unit
-                        let unitPrice = transaction.total_price / transaction.quantity;
-
-                        html += '<table>';
-                        html += '<tr>';
-                        
-                        // Product image
-                        html += '<td style="width: 200px;"><img src="' + transaction.product_image + '" alt="Product Image" class="product-image"></td>';
-                        
-                        // Product details
-                        html += '<td style="width: 600px;">';
-                        html += '<span style="font-size: 26px;"><b>' + transaction.product_name + '</b><br>';
-                        html += '<span style="font-size: 18px;">Quantity: ' + transaction.quantity + '<br>';
-                        html += '<span style="font-size: 18px;">Unit Price: IDR ' + unitPrice.toLocaleString('id-ID') + '<br>';
-                        html += '<span style="font-size: 18px;">Subtotal: IDR ' + transaction.total_price.toLocaleString('id-ID');
-                        html += '</td>';
-                        
-                        html += '</tr>';
-                        html += '</table>';
-                    });
-
-                    html += '<div style="font-size: 24px; text-align: right; font-weight: bold; margin: 20px 0;">Grand Total: IDR ' + totalSum.toLocaleString('id-ID') + '</div>';
-
-                    console.log('html:', html);
-
-                    $('#viewTransactionModal .modal-body').html(html);
-                    $('#viewTransactionModal').modal('show'); // Menampilkan modal
-                },
-                error: function() {
-                    console.log('error fetching transaction data');
-                }
+            // Menghitung total harga dan kuantitas
+            let totalSum = 0;
+            let totalQuantity = 0;
+            transactions.forEach(function (transaction) {
+              totalSum += transaction.total_price;
+              totalQuantity += transaction.quantity;
             });
-        }
+            transactions.forEach(function (transaction) {
+              // Calculate price per unit
+              let unitPrice = transaction.total_price / transaction.quantity;
+
+              html += "<table>";
+              html += "<tr>";
+
+              // Product image
+              html +=
+                '<td style="width: 200px;"><img src="' +
+                transaction.product_image +
+                '" alt="Product Image" class="product-image"></td>';
+
+              // Product details
+              html += '<td style="width: 600px;">';
+              html +=
+                '<span style="font-size: 26px;"><b>' +
+                transaction.product_name +
+                "</b><br>";
+              html +=
+                '<span style="font-size: 18px;">Quantity: ' +
+                transaction.quantity +
+                "<br>";
+              html +=
+                '<span style="font-size: 18px;">Unit Price: IDR ' +
+                unitPrice.toLocaleString("id-ID") +
+                "<br>";
+              html +=
+                '<span style="font-size: 18px;">Subtotal: IDR ' +
+                transaction.total_price.toLocaleString("id-ID");
+              html += "</td>";
+
+              html += "</tr>";
+              html += "</table>";
+            });
+
+            html +=
+              '<div style="font-size: 24px; text-align: right; font-weight: bold; margin: 20px 0;">Grand Total: IDR ' +
+              totalSum.toLocaleString("id-ID") +
+              "</div>";
+
+            console.log("html:", html);
+
+            $("#viewTransactionModal .modal-body").html(html);
+            $("#viewTransactionModal").modal("show"); // Menampilkan modal
+          },
+          error: function () {
+            console.log("error fetching transaction data");
+          },
+        });
+      }
     </script>
-    
+
     <!-- Tanggal dan Waktu -->
     <div class="date-time" id="date-time"></div>
 
     <script>
-        // Fungsi untuk memperbarui tanggal dan waktu
-        function updateDateTime() {
-            const options = {
-                weekday: 'long',
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit',
-                second: '2-digit',
-            };
-            const now = new Date();
-            document.getElementById('date-time').innerHTML = now.toLocaleDateString('id-ID', options);
-        }
+      // Fungsi untuk memperbarui tanggal dan waktu
+      function updateDateTime() {
+        const options = {
+          weekday: "long",
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
+        };
+        const now = new Date();
+        document.getElementById("date-time").innerHTML = now.toLocaleDateString(
+          "id-ID",
+          options,
+        );
+      }
 
-        // Memperbarui tanggal dan waktu setiap detik
-        setInterval(updateDateTime, 1000);
-        updateDateTime();
+      // Memperbarui tanggal dan waktu setiap detik
+      setInterval(updateDateTime, 1000);
+      updateDateTime();
     </script>
-    
+
     <script>
-        // Fungsi untuk menyimpan tampilan modal sebagai gambar PNG
-        document.getElementById('save-as-png').addEventListener('click', function() {
-            const modalBody = document.querySelector('#viewTransactionModal .modal-body');
-            modalBody.style.backgroundColor = '#ffffff';
-            domtoimage.toPng(modalBody)
-                .then(function(dataUrl) {
-                    const a = document.createElement('a');
-                    a.href = dataUrl;
-                    a.download = 'transaction.png';
-                    a.click();
-                });
+      // Fungsi untuk menyimpan tampilan modal sebagai gambar PNG
+      document
+        .getElementById("save-as-png")
+        .addEventListener("click", function () {
+          const modalBody = document.querySelector(
+            "#viewTransactionModal .modal-body",
+          );
+          modalBody.style.backgroundColor = "#ffffff";
+          domtoimage.toPng(modalBody).then(function (dataUrl) {
+            const a = document.createElement("a");
+            a.href = dataUrl;
+            a.download = "transaction.png";
+            a.click();
+          });
         });
     </script>
-</body>
+  </body>
 </html>

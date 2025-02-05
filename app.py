@@ -12,7 +12,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///inventory.db'  # Menentukan U
 db = SQLAlchemy(app)  # Menginisialisasi SQLAlchemy
 
 def format_price(price):  # Fungsi untuk memformat harga
-    return f"IDR {price:,.0f}".replace(',', '.')  # Format harga dalam IDR
+    return f"{price:,.0f}".replace(',', '.')  # Format harga dalam IDR
 
 # Model untuk produk
 class Product(db.Model):  # Mendefinisikan model produk

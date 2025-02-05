@@ -105,3 +105,10 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+# Node.js
+node_modules/
+
+# Ignore the generated CSS file
+static/output.css
+start-tailwinds.bat
