@@ -199,7 +199,7 @@ def checkout():
         db.session.delete(item)  # Hapus item dari keranjang
     db.session.commit()  # Simpan perubahan ke database
 
-    flash(f'Transaksi berhasil untuk {buyer_name}. Total Amount: {f"IDR {total_amount:,.0f}".replace(",", ".")}', 'success')  # Pesan sukses
+    flash(f'Transaction success for {buyer_name}. Total Amount: {f"IDR {total_amount:,.0f}".replace(",", ".")}', 'success')  # Pesan sukses
     return redirect(url_for('shop'))  # Kembali ke halaman shop
 
 # Route untuk menghapus transaksi
