@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8" />
+    <meta name="viewport" charset="UTF-8" />
     <title>Shop</title>
     <link href="static\output.css" rel="stylesheet" />
     <link
@@ -105,7 +105,7 @@
     </script>
   </head>
 
-  <body class="bg-gray-100 p-5 font-sans">
+  <body class="bg-gray-100 p-2 font-sans">
     <div class="container-fluid">
       {% with messages = get_flashed_messages(with_categories=True) %} {% if
       messages %}
@@ -119,7 +119,7 @@
       <!-- <h1 class="font-serif text-4xl font-bold text-black">Shop</h1> -->
       <div class="flex flex-wrap pt-2">
         <div
-          class="h-[80vh] w-2/3 overflow-y-auto pr-5 sm:mb-6 sm:w-full lg:w-2/3"
+          class="w-full overflow-y-auto p-1.5 sm:mb-6 sm:h-[60vh] lg:h-[85vh] lg:w-2/3"
         >
           <div class="mb-4">
             <!-- Dropdown for product category -->
@@ -137,30 +137,28 @@
 
           <!-- Grid for displaying products -->
           <div
-            class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3"
+            class="grid grid-cols-3 gap-2 lg:grid-cols-4 2xl:grid-cols-4"
             id="product-list"
           >
             {% for product in products %}
             <div
-              class="card relative rounded-lg border p-4 shadow-lg"
+              class="relative rounded-lg border shadow-lg"
               data-category="{{ product.category }}"
             >
               <!-- Product Image -->
               <img
                 src="{{ product.image_path }}"
-                class="{% if product.stock <= 0 %}opacity-40{% endif %} h-1/2 w-full cursor-pointer rounded-lg object-cover"
+                class="{% if product.stock <= 0 %}opacity-50{% endif %} h-1/2 w-full cursor-pointer rounded-lg object-cover"
                 loading="lazy"
                 alt="{{ product.name }}"
                 onclick="openModal('{{ product.image_path }}')"
               />
               <!-- Card Body -->
-              <div class="card-body">
+              <div class="flex flex-col items-center border-4 border-blue-500">
                 <p class="text-center font-mono text-lg">
                   Rp{{ format_price(product.price) }}
                 </p>
-                <h2 class="card-title text-center text-2xl font-bold">
-                  {{ product.name }}
-                </h2>
+                <p class="text-center text-2xl font-bold">{{ product.name }}</p>
                 {% if product.stock > 0 %}
                 <p class="text-center font-mono">Stock: {{ product.stock }}</p>
                 <form
@@ -168,18 +166,18 @@
                   method="POST"
                   onsubmit="updateCart()"
                 >
-                  <div class="mt-2 flex items-center">
+                  <div class="flex flex-col items-center justify-center gap-2">
                     <input
                       type="number"
                       name="quantity"
                       value="1"
                       min="1"
                       required
-                      class="quantity-input w-20 rounded-lg border p-2 text-center focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+                      class="quantity-input w-14 rounded-lg border p-1 text-center"
                     />
                     <button
                       type="submit"
-                      class="m-auto rounded-lg bg-indigo-600 px-4 py-2 text-white transition hover:bg-indigo-700"
+                      class="rounded-lg bg-indigo-600 px-3 py-2 text-white transition hover:bg-indigo-700"
                     >
                       Add to Cart
                     </button>
@@ -202,7 +200,7 @@
         </div>
 
         <div
-          class="h-[80vh] w-1/3 overflow-y-auto rounded-lg bg-white p-6 shadow-md sm:mt-6 sm:w-full lg:w-1/3"
+          class="w-full overflow-y-auto rounded-lg bg-white p-6 shadow-md sm:mt-6 sm:h-[40vh] lg:h-[85vh] lg:w-1/3"
         >
           <h2 class="text-2xl font-semibold text-gray-800">
             Your Cart
